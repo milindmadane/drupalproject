@@ -1,0 +1,37 @@
+<?php
+/**
+ * @file
+ *
+ * Eloqua Integration Module
+ *
+ * This module provides Eloqua visitor tracking and some basic configuration.
+ *
+ * @package Eloqua
+ */
+
+/**
+ * Implements hook_init().
+ */
+function eloqua_init() {
+  $site_id = check_plain(variable_get('eloqua_site_id', 0));
+
+  drupal_add_js(array('eloqua' => array('siteId' => $site_id)), 'setting');
+  drupal_add_js(drupal_get_path('module', 'eloqua') . '/eloqua.js');
+}
+
+/**
+ * Implements hook_menu().
+ */
+function eloqua_menu() {
+  $items = array();
+  $items['admin/config/services/eloqua'] = array(
+    'title' => 'Eloqua',
+    'description' => 'Create and edit Eloqua settings.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('eloqua_admin_form'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'eloqua.admin.inc',
+  );
+  return $items;
+}

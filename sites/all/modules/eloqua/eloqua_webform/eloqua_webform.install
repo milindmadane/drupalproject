@@ -1,0 +1,130 @@
+<?php
+/**
+ * @file
+ *
+ * Eloqua Webform install, schema, uninstall and update hooks.
+ */
+
+/**
+ * Implements hook_schema()
+ */
+function eloqua_webform_schema() {
+  $schema = array();
+  $schema['eloqua_saved_posts'] = array(
+    'description' => t('Webform Settings'),
+    'primary key' => array('post_id'),
+    'unique keys' => array(),
+    'indexes' => array(
+      'eloqua_saved_posts' . '_form_id' => array('form_id'),
+    ),
+    'fields' => array(
+      'form_id' => array(
+        // Associated Form Id
+        'description' => 'Form ID that generated this post',
+        'type' => 'varchar',
+        'size' => 'normal',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'post_id' => array(
+        // Serial Number
+        'type' => 'serial',
+        'size' => 'normal',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'status' => array(
+        // Form Posted Status
+        'description' => 'Eloqua option name',
+        'type' => 'varchar',
+        'size' => 'normal',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'post_time' => array(
+        // Post Time
+        'description' => 'Node Id',
+        'type' => 'int',
+        'size' => 'normal',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'data' => array(
+        // Form Contents
+        'description' => 'Extra data to be stored with the field',
+        'type' => 'text',
+        'size' => 'normal', /* 16KB in mySql */
+        'not null' => TRUE,
+      ),
+    ),
+  );
+
+  $schema['eloqua_webform'] = array(
+    'description' => t('Webform Settings'),
+    'primary key' => array('nid'),
+    'unique keys' => array(),
+    'indexes' => array(
+      'eloqua_webform' . '_active' => array('is_active'),
+    ),
+    'fields' => array(
+      'nid' => array(
+        // Webform Node Id
+        'description' => 'Node Id',
+        'type' => 'int',
+        'size' => 'normal',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'form_name' => array(
+        // Eloqua Form Name
+        'description' => 'Eloqua form name',
+        'type' => 'varchar',
+        'size' => 'normal',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'is_active' => array(
+        // Is this webform eloqua enabled
+        'description' => 'Whether this form is eloqua active',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'unsigned' => TRUE,
+      ),
+      'data' => array(
+        'description' => 'Extra data to be stored with the field',
+        'type' => 'text',
+        'size' => 'normal', /* 16KB in mySql */
+        'not null' => TRUE,
+      ),
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function eloqua_webform_install() {
+  variable_set('eloqua_webform_process_submit', 0);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function eloqua_webform_uninstall() {
+
+}
+
+/**
+ * Add new variable
+ */
+function eloqua_webform_update_7000() {
+  variable_set('eloqua_webform_process_submit', 0);
+}

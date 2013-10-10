@@ -1,0 +1,61 @@
+<?php
+//hook_init
+function hello_init(){
+	//drupal_set_message("Hello this is Milind");
+}
+//hook_menu
+function hello_menu(){
+	$items = array();
+
+	$items ['hellopage'] = array (
+	
+		'title'=>'My Hello Page',
+		'description'=>'Hellos Users',
+		'page callback'=>'drupal_get_form',
+		'page arguments'=>array('hello_showHelloForm'),
+		'access callback'=>'user_access',
+		'access arguments'=>array('access content'),
+		'type'=>MENU_NORMAL_ITEM
+	);
+
+	/*$items ['hellopage'] = array (
+	
+		'page callback'=>'drupal_get_form',
+		'page arguments'=>array('hello_ajaxCallHandler'),
+		'access callback'=>'user_access',
+		'access arguments'=>array('access content'),
+		'type'=>MENU_CALLBACK
+	);*/
+
+	return $items;
+}
+function hello_ajaxCallHandler(){
+	echo "Hello through call back";
+}
+function hello_showHelloForm(){
+	$form = array();
+
+	$form ['name'] = array (
+	  '#type'=>'textfield',
+	  '#title'=>'Enter your name'
+	);
+
+	$form ['submit'] = array (
+	  '#type'=>'submit',
+	  '#value'=>'Submit'
+	);
+
+	/*$form['#suffix']='<input type="button" id="submitAjaxButton" value="submit with Ajax"><br><div id="msg-display-area"></div>';
+
+	drupal_add_js(drupal_get_path('module','hello').'/hello.js');*/
+
+	return $form;
+}
+function hello_showHelloForm_submit($form,&$form_state){
+	if ($form_state['values']['name']==""){
+	form_set_error('name','name cannot be blank');
+	}else{
+	drupal_set_message('Welcome '.$form_state['values']['name']);
+	}
+}
+?>
